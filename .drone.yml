@@ -1,0 +1,7 @@
+pipeline:
+  build:
+    image: idnar/node-yarn:latest
+    pull: true
+    commands:
+      - yarn install
+      - node run dist-build

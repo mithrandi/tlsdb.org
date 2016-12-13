@@ -5,15 +5,15 @@ const webpack = require('webpack')
     , HtmlWebpackPlugin = require('html-webpack-plugin')
     , autoprefixer = require('autoprefixer')
     , GitRevisionPlugin = require('git-revision-webpack-plugin')
+    , ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: [
-        'react-hot-loader/patch',
         'es6-promise',
         'whatwg-fetch',
         path.resolve(__dirname, 'src', 'index.js')
     ],
-    devtool: 'cheap-module-source-map',
+    devtool: 'source-map',
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, 'public'),
@@ -47,13 +47,9 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                loaders: [
+                loader: ExtractTextPlugin.extract(
                     'style-loader',
-                    'css-loader?sourceMap',
-                    'postcss-loader',
-                    'resolve-url-loader',
-                    'sass-loader?sourceMap'
-                ],
+                    'css-loader?sourceMap!postcss-loader!resolve-url-loader!sass-loader?sourceMap')
             },
             {
                 test: /\.(woff|woff2)$/,
@@ -81,7 +77,21 @@ module.exports = {
     },
     plugins: [
         new webpack.NoErrorsPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            },
+            'VERSION': JSON.stringify(new GitRevisionPlugin().version()),
+        }),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                dead_code: true
+            }
+        }),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new ExtractTextPlugin('styles/styles.css'),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'src', 'template.html')
         }),

@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --progress --profile --colors",
-    "dist-build": "webpack --config webpack.config.js --progress --profile --colors"
+    "dist-build": "webpack --config webpack.prod.config.js --progress --profile --colors"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.3.1",
@@ -34,7 +34,9 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
+    "git-revision-webpack-plugin": "^2.4.0",
     "html-webpack-plugin": "^2.24.1",
     "json-loader": "^0.5.4",
     "node-sass": "^4.0.0",
